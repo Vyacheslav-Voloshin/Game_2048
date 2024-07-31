@@ -1,6 +1,7 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -74,17 +75,20 @@ public class Model {
 плитки праворуч, тобто. ряд {4, 2, 0, 4} стає поряд {4, 2, 4, 0}
  */
 
-private void compressTiles(Tile[] tiles) {
+private boolean compressTiles(Tile[] tiles) {
+    boolean value = false;
     int insertPosition = 0;
     for (int i = 0; i < FIELD_WIDTH; i++) {
         if (!tiles[i].isEmpty()) {
             if (i != insertPosition) {
                 tiles[insertPosition] = tiles[i];
                 tiles[i] = new Tile();
+                value = true;
             }
             insertPosition++;
         }
     }
+    return value;
 }
 
 /*
@@ -92,42 +96,60 @@ private void compressTiles(Tile[] tiles) {
 ряд {4, 4, 2, 0} стає поряд {8, 2, 0, 0}.
 Зверніть увагу, що ряд {4, 4, 4, 4} перетвориться {8, 8, 0, 0}, а {4, 4, 4, 0} {8, 4, 0, 0}.
  */
-    private void mergeTiles(Tile[] tiles){
+    private boolean mergeTiles(Tile[] tiles){
+        boolean value = false;
         for (int i = 0; i < FIELD_WIDTH-1; i++) {
             if (tiles[i].value == tiles[i+1].value){
                 tiles[i].value = tiles[i].value + tiles[i+1].value;
                 tiles[i+1].value = 0;
                 if (tiles[i].value>maxTile) maxTile=tiles[i].value;
                 score+=tiles[i].value;
+                if (tiles[i].value != 0 )value = true;
             }
         }
         compressTiles(tiles);
+        return value;
+    }
+
+    /*
+    метод left, який буде для кожної рядки масиву gameTiles викликати методи compressTiles
+ та mergeTiles і додавати одну плитку за допомогою  методу addTile у разі, якщо це необхідно.
+     */
+    public void left (){
+        boolean res = false;
+        for (Tile[] t:gameTiles) {
+            if (compressTiles(t)|mergeTiles(t)) res = true;
+        }
+        if (res) addTile();
     }
 
     public static void main(String[] args) {
-        Model m = new Model();
-        m.gameTiles = new Tile[][]{{new Tile(4), new Tile(4), new Tile(2), new Tile(0)},
-                {new Tile(4), new Tile(2), new Tile(0), new Tile(4)},
-                {new Tile(4), new Tile(4), new Tile(4), new Tile(0)},
-                {new Tile(4), new Tile(4), new Tile(4), new Tile(0)}};
-        for (Tile[] t: m.gameTiles) {
-            for (int i = 0; i < t.length; i++) {
-                System.out.print(t[i].value + " ");
-            }
-            //m.compressTiles(t);
+        Model model = new Model();
+// для compress
+//        Tile[][] tiles = new Tile[][]{{new Tile(8), new Tile(0), new Tile(0), new Tile(0)},
+//                {new Tile(4), new Tile(0), new Tile(0), new Tile(4)},
+//                {new Tile(0), new Tile(4), new Tile(4), new Tile(0)},
+//                {new Tile(0), new Tile(2), new Tile(0), new Tile(2)}};
+        // для merge
+           Tile[][] tiles = new Tile[][]{{new Tile(8), new Tile(0), new Tile(0), new Tile(0)},
+                   {new Tile(4), new Tile(2), new Tile(2), new Tile(4)},
+                   {new Tile(4), new Tile(4), new Tile(4), new Tile(0)},
+                  {new Tile(4), new Tile(4), new Tile(4), new Tile(4)}};
+        //
+        // До
+        for (int i = 0; i < tiles.length; i++) {
+            System.out.println(Arrays.toString(tiles[i]));
         }
         System.out.println();
-        for (Tile[] t: m.gameTiles) {
-            m.mergeTiles(t);
-        }
-        for (Tile[] t: m.gameTiles) {
-            for (int i = 0; i < t.length; i++) {
-                System.out.print(t[i].value + " ");
-            }
-            //m.compressTiles(t);
+        //
+        for (int i = 0; i < tiles.length; i++) {
+            System.out.println(model.mergeTiles(tiles[i]));
+            // System.out.println(model.mergeTiles(tiles[i]));
         }
         System.out.println();
-        System.out.println(m.score);
-        System.out.println(m.maxTile);
+        //После
+        for (int i = 0; i < tiles.length; i++) {
+            System.out.println(Arrays.toString(tiles[i]));
+        }
     }
 }
