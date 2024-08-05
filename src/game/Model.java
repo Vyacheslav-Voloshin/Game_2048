@@ -24,12 +24,16 @@ public class Model {
         resetGameTiles();
     }
 
+    public Tile[][] getGameTiles() {
+        return gameTiles;
+    }
 
-/*
-метод addTile, який дивитися які плитки порожні і, якщо такі
- є,міняти вагу однієї з них, обраною випадковим чином,
-на 2 або 4 (на 9 двійок повинна припадати 1 четвірка).
- */
+
+    /*
+        метод addTile, який дивитися які плитки порожні і, якщо такі
+         є,міняти вагу однієї з них, обраною випадковим чином,
+        на 2 або 4 (на 9 двійок повинна припадати 1 четвірка).
+         */
     private void  addTile(){
         List<Tile> emptyTiles = getEmptyTiles();
         if (!emptyTiles.isEmpty()) {
@@ -111,8 +115,21 @@ private boolean compressTiles(Tile[] tiles) {
         return value;
     }
 
+    //метод, який повертає на 90 градусів по часовій стрілці наш масив
+    private Tile[][] ninetyDegreeTurn (Tile[][] tiles){
+        int n = tiles.length;
+        Tile[][] res = new Tile[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                res[j][n-1-i]=tiles[i][j];
+
+            }
+        }
+        return res;
+    }
+
     /*
-    метод left, який буде для кожної рядки масиву gameTiles викликати методи compressTiles
+    метод left, який буде для кожної рядка масиву gameTiles викликати методи compressTiles
  та mergeTiles і додавати одну плитку за допомогою  методу addTile у разі, якщо це необхідно.
      */
     public void left (){
@@ -121,6 +138,64 @@ private boolean compressTiles(Tile[] tiles) {
             if (compressTiles(t)|mergeTiles(t)) res = true;
         }
         if (res) addTile();
+    }
+
+    /*
+     метод up, який буде переміщати вниз елементи масиву, викликати для кожної рядка масиву gameTiles викликати методи compressTiles
+ та mergeTiles і додавати одну плитку за допомогою  методу addTile у разі, якщо це необхідно.
+     */
+    public void   down(){
+       gameTiles = ninetyDegreeTurn(gameTiles);
+       left();
+        gameTiles = ninetyDegreeTurn(gameTiles);
+        gameTiles = ninetyDegreeTurn(gameTiles);
+        gameTiles = ninetyDegreeTurn(gameTiles);
+    }
+
+
+    /*
+     метод right, який буде переміщати праворуч елементи масиву, викликати для кожної рядка масиву gameTiles викликати методи compressTiles
+ та mergeTiles і додавати одну плитку за допомогою  методу addTile у разі, якщо це необхідно.
+     */
+    public void   right(){
+        gameTiles = ninetyDegreeTurn(gameTiles);
+        gameTiles = ninetyDegreeTurn(gameTiles);
+        left();
+        gameTiles = ninetyDegreeTurn(gameTiles);
+        gameTiles = ninetyDegreeTurn(gameTiles);
+
+    }
+
+    /*
+     метод up, який буде переміщати вгору елементи масиву, викликати для кожної рядка масиву gameTiles викликати методи compressTiles
+ та mergeTiles і додавати одну плитку за допомогою  методу addTile у разі, якщо це необхідно.
+     */
+    public void   up(){
+        gameTiles = ninetyDegreeTurn(gameTiles);
+        gameTiles = ninetyDegreeTurn(gameTiles);
+        gameTiles = ninetyDegreeTurn(gameTiles);
+        left();
+        gameTiles = ninetyDegreeTurn(gameTiles);
+    }
+
+    /*
+    метод canMove повертаючий true у випадку, якщо в поточній позиції можна зробити
+    хід те щоб стан ігрового поля змінилося. Інакше – false.
+    Відповідно до правил гри хід можливий, якщо на ігровому полі є хоча б одна вільна клітина,
+    і якщо є плитки, що стикаються один з одним і при цьому мають однакові значення.
+     */
+    public boolean canMove (){
+        if (getEmptyTiles().size()!=0) return true;
+        for (int x = 0; x < FIELD_WIDTH; x++) {
+            for (int y = 0; y < FIELD_WIDTH; y++) {
+                Tile t = gameTiles[x][y];
+                if ((x < FIELD_WIDTH - 1 && t.value == gameTiles[x + 1][y].value)
+                        || ((y < FIELD_WIDTH - 1) && t.value == gameTiles[x][y + 1].value)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static void main(String[] args) {
@@ -141,15 +216,21 @@ private boolean compressTiles(Tile[] tiles) {
             System.out.println(Arrays.toString(tiles[i]));
         }
         System.out.println();
-        //
-        for (int i = 0; i < tiles.length; i++) {
-            System.out.println(model.mergeTiles(tiles[i]));
-            // System.out.println(model.mergeTiles(tiles[i]));
-        }
-        System.out.println();
-        //После
+
+        model.down();
         for (int i = 0; i < tiles.length; i++) {
             System.out.println(Arrays.toString(tiles[i]));
         }
+        System.out.println();
+        //
+//        for (int i = 0; i < tiles.length; i++) {
+//            System.out.println(model.mergeTiles(tiles[i]));
+//            // System.out.println(model.mergeTiles(tiles[i]));
+//        }
+//        System.out.println();
+//        //После
+//        for (int i = 0; i < tiles.length; i++) {
+//            System.out.println(Arrays.toString(tiles[i]));
+//        }
     }
 }
