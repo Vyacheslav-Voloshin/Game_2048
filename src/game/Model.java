@@ -1,5 +1,6 @@
 package game;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -198,39 +199,4 @@ private boolean compressTiles(Tile[] tiles) {
         return false;
     }
 
-    public static void main(String[] args) {
-        Model model = new Model();
-// для compress
-//        Tile[][] tiles = new Tile[][]{{new Tile(8), new Tile(0), new Tile(0), new Tile(0)},
-//                {new Tile(4), new Tile(0), new Tile(0), new Tile(4)},
-//                {new Tile(0), new Tile(4), new Tile(4), new Tile(0)},
-//                {new Tile(0), new Tile(2), new Tile(0), new Tile(2)}};
-        // для merge
-           Tile[][] tiles = new Tile[][]{{new Tile(8), new Tile(0), new Tile(0), new Tile(0)},
-                   {new Tile(4), new Tile(2), new Tile(2), new Tile(4)},
-                   {new Tile(4), new Tile(4), new Tile(4), new Tile(0)},
-                  {new Tile(4), new Tile(4), new Tile(4), new Tile(4)}};
-        //
-        // До
-        for (int i = 0; i < tiles.length; i++) {
-            System.out.println(Arrays.toString(tiles[i]));
-        }
-        System.out.println();
-
-        model.down();
-        for (int i = 0; i < tiles.length; i++) {
-            System.out.println(Arrays.toString(tiles[i]));
-        }
-        System.out.println();
-        //
-//        for (int i = 0; i < tiles.length; i++) {
-//            System.out.println(model.mergeTiles(tiles[i]));
-//            // System.out.println(model.mergeTiles(tiles[i]));
-//        }
-//        System.out.println();
-//        //После
-//        for (int i = 0; i < tiles.length; i++) {
-//            System.out.println(Arrays.toString(tiles[i]));
-//        }
-    }
 }

@@ -29,6 +29,10 @@ public class Controller extends KeyAdapter {
         return model.score;
     }
 
+    public View getView() {
+        return view;
+    }
+
     //метод resetGame, який дозволить повернути ігрове поле у початковий стан.
     public void resetGame(){
         model.score=0;
