@@ -141,11 +141,13 @@ private boolean compressTiles(Tile[] tiles) {
  та mergeTiles і додавати одну плитку за допомогою  методу addTile у разі, якщо це необхідно.
      */
     public void left (){
+        if (isSaveNeeded) saveState(gameTiles);
         boolean res = false;
         for (Tile[] t:gameTiles) {
             if (compressTiles(t)|mergeTiles(t)) res = true;
         }
         if (res) addTile();
+        isSaveNeeded=true;
     }
 
     /*
@@ -153,6 +155,7 @@ private boolean compressTiles(Tile[] tiles) {
  та mergeTiles і додавати одну плитку за допомогою  методу addTile у разі, якщо це необхідно.
      */
     public void   down(){
+        saveState(gameTiles);
        gameTiles = ninetyDegreeTurn(gameTiles);
        left();
         gameTiles = ninetyDegreeTurn(gameTiles);
@@ -166,6 +169,7 @@ private boolean compressTiles(Tile[] tiles) {
  та mergeTiles і додавати одну плитку за допомогою  методу addTile у разі, якщо це необхідно.
      */
     public void   right(){
+        saveState(gameTiles);
         gameTiles = ninetyDegreeTurn(gameTiles);
         gameTiles = ninetyDegreeTurn(gameTiles);
         left();
@@ -179,6 +183,7 @@ private boolean compressTiles(Tile[] tiles) {
  та mergeTiles і додавати одну плитку за допомогою  методу addTile у разі, якщо це необхідно.
      */
     public void   up(){
+        saveState(gameTiles);
         gameTiles = ninetyDegreeTurn(gameTiles);
         gameTiles = ninetyDegreeTurn(gameTiles);
         gameTiles = ninetyDegreeTurn(gameTiles);
