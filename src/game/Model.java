@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 
 /*
  Клас міститиме ігрову логіку та зберігатиме
@@ -19,10 +20,16 @@ public class Model {
 
      int maxTile = 0; // поле, яке має максимальна вагу плитки на ігровому полі
 
+    private Stack<Tile[][]> previousStates; // стек в якому ми зберігаємо попередній стан ігрового поля
 
+    private Stack<Integer> previousScores; // стек в якому ми зберігаємо попередній рахунок
+
+    boolean  isSaveNeeded = true;
 
     public Model() {
         resetGameTiles();
+        previousScores = new Stack<>();
+        previousStates = new Stack<>();
     }
 
     public Tile[][] getGameTiles() {
@@ -197,6 +204,33 @@ private boolean compressTiles(Tile[] tiles) {
             }
         }
         return false;
+    }
+
+   /*Метод збереження  з одним параметром типу Tile[][] зберігатиме поточне
+     ігровий стан та рахунок у стеки за допомогою методом push і
+    встановлювати прапор isSaveNeeded рівним false
+    */
+    private void saveState (Tile[][] gameTiles){
+        Tile[][] tiles = new Tile[FIELD_WIDTH][FIELD_WIDTH];
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles.length; j++) {
+                tiles[i][j] =  new Tile(gameTiles[i][j].value);
+            }
+        }
+        previousStates.push(tiles);
+        previousScores.push(this.score);
+        isSaveNeeded=false;
+    }
+
+    /*
+    метод rollback буде встановлювати поточне ігровий стан рівним останньому, що перебуває в стеках
+    за допомогою методу pop.
+     */
+    public void rollback(){
+        if (!previousScores.isEmpty() && !previousStates.isEmpty()) {
+            gameTiles = previousStates.pop();
+            score = previousScores.pop();
+        }
     }
 
 }
