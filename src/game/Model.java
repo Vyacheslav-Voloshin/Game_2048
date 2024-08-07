@@ -238,4 +238,20 @@ private boolean compressTiles(Tile[] tiles) {
         }
     }
 
+    /*
+    метод randomMove в класі Model, який буде викликати один із методів
+    руху випадковим чином
+     */
+    public void randomMove(){
+        int rundomNumber = ((int) (Math.random()*100))%4;
+        switch (rundomNumber) {
+            case (1) -> up();
+            case (2) -> down();
+            case (3) -> right();
+            case (4) -> left();
+        }
+
+
+    }
+
 }
