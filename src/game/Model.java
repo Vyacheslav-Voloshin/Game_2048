@@ -66,6 +66,10 @@ public class Model {
         return tileList;
     }
 
+    public int getEmptyTilesCount(){
+        return getEmptyTiles().size();
+    }
+
 
     /*
     Метод resetGameTiles повинен заповнювати масив gameTiles новими
@@ -250,8 +254,37 @@ private boolean compressTiles(Tile[] tiles) {
             case (3) -> right();
             case (4) -> left();
         }
+    }
 
+    /*
+    метод  boolean hasBoardChanged - повертатиме true,
+    у випадку, якщо вага плиток у масиві gameTiles відрізняється
+    Від ваги плиток у верхньому масиві стека previousStates.
+    Зверніть увагу на те, що ми не повинні видаляти зі стека
+    верхній елемент за допомогою методу peek.
+     */
+    public boolean hasBoardChanged(){
+        for (int i = 0; i < FIELD_WIDTH; i++) {
+            for (int j = 0; j < FIELD_WIDTH; j++) {
+                if(gameTiles[i][j].value !=previousStates.peek()[i][j].value){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+    /*
+    метод описуючий ефективність переданого коду
+     */
+    public MoveEfficiency getMoveEfficiency(Move move){
+       MoveEfficiency moveEfficiency = new MoveEfficiency(-1,0,move);
+       move.move();
+       if (hasBoardChanged()){
+           moveEfficiency = new MoveEfficiency(getEmptyTilesCount(),score,move);
+       }
+       rollback();
+       return moveEfficiency;
     }
 
 }
