@@ -1,10 +1,7 @@
 package game;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /*
  Клас міститиме ігрову логіку та зберігатиме
@@ -285,6 +282,21 @@ private boolean compressTiles(Tile[] tiles) {
        }
        rollback();
        return moveEfficiency;
+    }
+
+    /*
+    метод autoMove у класі Model, який буде вибирати найкращий з можливих ходів та
+    виконувати його.
+     */
+    public void autoMove(){
+        PriorityQueue<MoveEfficiency> queue = new PriorityQueue<>(4,Collections.reverseOrder());
+        queue.offer(getMoveEfficiency(this::left));
+        queue.offer(getMoveEfficiency(this::right));
+        queue.offer(getMoveEfficiency(this::up));
+        queue.offer(getMoveEfficiency(this::down));
+        queue.peek().getMove().move();
+
+
     }
 
 }
